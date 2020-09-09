@@ -20,21 +20,46 @@ class Users extends Component {
         this.getApprovalData();
       }
 
-handleApprove(user)
+componentDidUpdate()
 {
-    //var reqparam = {userrole: this.props.location.state.userrole, userid: user.UserId};
-    var requrl = "https://localhost:5001/Api/UserInfo/approve/"+this.props.role+"/"+user.UserId;
-        setTimeout(() => {
-            axios({
-                method: "put",
-                url: requrl,
-                data: user,
-                param: null
-              }).then(resp =>  {
-                  this.getApprovalData();
-              });
-        }, 1000);
+    if(this.props.role.toString().toLowerCase() === Constant.ADMIN)
+    {
+        this.getAllUserData();
+    }
 }
+
+    handleApprove(user)
+    {
+        this.props.role === Constant.SUPER ? user.Status = Constant.ACTIVE : user.Status = Constant.APPROVEUSER;
+        var requrl = "https://localhost:5001/Api/UserInfo/approvedeny/"+this.props.role+"/"+user.UserId;
+            setTimeout(() => {
+                axios({
+                    method: "put",
+                    url: requrl,
+                    data: user,
+                    param: null
+                }).then(resp =>  {
+                    this.getApprovalData();
+                });
+            }, 1000);
+    }
+
+    handleDeny(user)
+    {
+        user.Status = Constant.INACTIVE;
+        //var reqparam = {userrole: this.props.location.state.userrole, userid: user.UserId};
+        var requrl = "https://localhost:5001/Api/UserInfo/approvedeny/"+this.props.role+"/"+user.UserId;
+            setTimeout(() => {
+                axios({
+                    method: "put",
+                    url: requrl,
+                    data: user,
+                    param: null
+                }).then(resp =>  {
+                    this.getApprovalData();
+                });
+            }, 1000);
+    }
 
       getApprovalData(){
         var reqparam = {userrole: this.props.role};
@@ -128,7 +153,7 @@ render(){
                                                         </td>
                                                         <td>
                                                             <Button variant="primary" onClick={ ()=> this.handleApprove(item)}>Approve</Button>{' '}
-                                                            {/* <Button variant="danger" onClick={ ()=> this.handleApprove(item)}>Deny</Button> */}
+                                                            <Button variant="danger" onClick={ ()=> this.handleDeny(item)}>Deny</Button>
                                                         </td>
                                                     </tr>
                                                     )
@@ -185,7 +210,11 @@ render(){
                                                                 (item.Status === Constant.APPROVEUSER ? 
                                                                 <Badge variant="success">Pending</Badge>
                                                                 :
+                                                                (item.Status === Constant.INACTIVE ?
+                                                                    <Badge variant="light">In Active</Badge>
+                                                                :
                                                                 <Badge variant="primary">Active</Badge>
+                                                                )
                                                                 )
                                                             }
                                                             </td>
