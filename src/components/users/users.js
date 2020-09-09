@@ -30,7 +30,7 @@ componentDidUpdate()
 
     handleApprove(user)
     {
-        this.props.role === Constant.SUPER ? user.Status = Constant.ACTIVE : user.Status = Constant.APPROVEUSER;
+        this.props.role.toString().toLowerCase() === Constant.SUPER ? user.Status = Constant.ACTIVE : user.Status = Constant.APPROVEUSER;
         var requrl = "https://localhost:5001/Api/UserInfo/approvedeny/"+this.props.role+"/"+user.UserId;
             setTimeout(() => {
                 axios({
