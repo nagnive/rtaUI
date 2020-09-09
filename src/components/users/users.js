@@ -13,7 +13,7 @@ class Users extends Component {
     }
     
     componentDidMount(){
-        if(this.props.role.toString().toLowerCase() === Constant.SUPER)
+        if(this.props.role.toString().toLowerCase() === Constant.ADMIN)
         {
             this.getAllUserData();
         }
@@ -145,7 +145,7 @@ render(){
                     </Row>
 
                     {
-                        this.props.role.toString().toLowerCase() === Constant.SUPER ?
+                        this.props.role.toString().toLowerCase() === Constant.ADMIN ?
                         <div>
                             <Row>
                             <Col>
